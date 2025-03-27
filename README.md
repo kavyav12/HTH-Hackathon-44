@@ -1,3 +1,5 @@
+# JustiSense
+
 ### Key Points
 - It seems likely that the features listed, including multilingual support, document analysis, contract generation, chat interface, chat history, contract enhancement, legal advice, multilingual voice assistant, and secure decentralized learning through federated learning, are comprehensive for the JustiSense application.
 - Research suggests that implementing a multilingual voice assistant involves using browser-based Web Speech API for speech recognition and synthesis, supporting multiple Indian languages.
