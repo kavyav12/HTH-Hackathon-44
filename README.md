@@ -1,5 +1,5 @@
 
-**Legal Assist Pro** is a powerful Streamlit-based application designed to assist users with legal document analysis, contract generation, and multilingual support for Indian languages. Leveraging AI models for natural language processing and document understanding, it provides a user-friendly interface for legal professionals and individuals alike.
+**JUSTISENSE** is a powerful Streamlit-based application designed to assist users with legal document analysis, contract generation, and multilingual support for Indian languages. Leveraging AI models for natural language processing and document understanding, it provides a user-friendly interface for legal professionals and individuals alike.
 
 ## Features
 
