@@ -137,10 +137,3 @@ Please ensure your code follows Python PEP 8 guidelines and includes appropriate
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Contact
-
-For questions, feedback, or support, please reach out to [your-email@example.com](mailto:your-email@example.com) or open an issue on the GitHub repository.
-
----
-
-This README provides a clear, standalone guide to understanding, installing, and using the "Legal Assist Pro" application. Customize the repository URL, email, and additional details as needed for your specific project.
