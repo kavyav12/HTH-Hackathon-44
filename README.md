@@ -5,9 +5,7 @@
 - Research suggests that implementing a multilingual voice assistant involves using browser-based Web Speech API for speech recognition and synthesis, supporting multiple Indian languages.
 - The evidence leans toward secure decentralization through federated learning being feasible for document type classification, using client-side PDF processing with PDF.js and local model training, though it adds complexity.
 
----
-
-### Direct Answer
+--------------------------------
 
 #### Introduction to JustiSense
 JustiSense is a Streamlit-based application designed to help with legal document analysis and contract creation, supporting multiple Indian languages. It’s built for legal professionals and individuals, using AI to make legal tasks easier.
