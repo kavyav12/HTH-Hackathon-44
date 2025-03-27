@@ -1005,7 +1005,8 @@ def get_text_chunks(text):
 def get_vector_store(text_chunks):
     """Create FAISS vector store from text chunks with error handling."""
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-
+    
+    # Process in smaller batches to avoid issues with very large documents
     vector_store = None
     batch_size = 100  # Adjust based on your needs
     
