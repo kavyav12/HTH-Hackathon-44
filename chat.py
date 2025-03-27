@@ -1,7 +1,9 @@
 import streamlit as st
+import speech_recognition as sr
+from gtts import gTTS
+import os
 from PyPDF2 import PdfReader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-import os
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 import google.generativeai as genai
 from langchain.vectorstores import FAISS
@@ -12,7 +14,7 @@ from docx import Document
 from dotenv import load_dotenv
 from googletrans import Translator
 
-# Load environment variables
+# Load API Key
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
@@ -21,10 +23,38 @@ if not api_key:
 
 genai.configure(api_key=api_key)
 
-# Initialize session state for history
+# Initialize session history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
+# Text-to-Speech
+def speak(text):
+    """Convert text to speech and play it."""
+    tts = gTTS(text=text, lang="en")
+    tts.save("response.mp3")
+    os.system("start response.mp3")  # Windows
+    # os.system("mpg321 response.mp3")  # Linux/macOS
+
+# Speech Recognition
+def recognize_speech():
+    """Convert speech to text."""
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        st.info("Listening...")
+        recognizer.adjust_for_ambient_noise(source)
+        try:
+            audio = recognizer.listen(source, timeout=5)
+            text = recognizer.recognize_google(audio)
+            st.success(f"You said: {text}")
+            return text
+        except sr.UnknownValueError:
+            st.error("Sorry, could not understand.")
+            return ""
+        except sr.RequestError:
+            st.error("Could not request results. Check your internet connection.")
+            return ""
+
+# PDF Text Extraction
 def get_pdf_text(pdf_docs):
     """Extract text from uploaded PDFs."""
     text = ""
@@ -36,31 +66,35 @@ def get_pdf_text(pdf_docs):
                 text += page_text + "\n"
     return text
 
+# Split Text into Chunks
 def get_text_chunks(text):
     """Split text into chunks for vector storage."""
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
     return text_splitter.split_text(text)
 
+# Create Vector Store
 def get_vector_store(text_chunks):
     """Create FAISS vector store from text chunks."""
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
 
+# Conversational AI Model
 def get_conversational_chain():
     """Initialize Gemini conversational chain."""
     prompt_template = """
     Answer the question as detailed as possible from the provided context. 
-    If the answer is not in the provided context, respond with "answer is not available in the context".
+    If the answer is not in the provided context, respond with 'Answer is not available in the context'.
     
     Context:\n {context}\n
     Question: \n{question}\n
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-pro-latest", temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     return load_qa_chain(model, chain_type="stuff", prompt=prompt)
 
+# Process User Input
 def user_input(user_question, language):
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
 
@@ -74,7 +108,7 @@ def user_input(user_question, language):
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
 
     reply = response.get("output_text", "No response generated.")
-    
+
     # Translate response if needed
     if language != "English":
         translator = Translator()
@@ -85,6 +119,10 @@ def user_input(user_question, language):
 
     st.write("Reply:", reply)
 
+    # Speak the response
+    speak(reply)
+
+# Draft Contract
 def draft_contract(scenario):
     """Generate a contract based on the scenario."""
     contract = f"""
@@ -115,6 +153,7 @@ def draft_contract(scenario):
 
     return contract.strip()
 
+# Save Contract to Word
 def save_contract_to_word(contract_text, filename="contract.docx"):
     """Save contract to a Word document."""
     doc = Document()
@@ -122,15 +161,20 @@ def save_contract_to_word(contract_text, filename="contract.docx"):
     doc.save(filename)
     return filename
 
+# Streamlit UI
 def main():
-    """Streamlit UI"""
     st.set_page_config(page_title="Legal Assist", layout="wide")
     
     col1, col2 = st.columns([3, 1])  # Left: Chat | Right: History
 
     with col1:
         st.header("Chat with a Legal Assistant💁")
-        user_question = st.text_input("Ask about the document")
+
+        # Speech to Text Button
+        if st.button("🎤 Speak a Question"):
+            user_question = recognize_speech()
+        else:
+            user_question = st.text_input("Ask about the document")
 
         # Language selection
         languages = ["English", "Hindi", "Tamil", "Telugu", "Kannada", "Malayalam"]
