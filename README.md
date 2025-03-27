@@ -24,8 +24,8 @@ Follow these steps to set up the project locally:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/your-repo/legal-assist-pro.git
-   cd legal-assist-pro
+   git clone https://github.com/your-repo/HTH-Hackathon-44.git
+   cd HTH-Hackathon-44
    ```
 
 2. **Install Dependencies:**
