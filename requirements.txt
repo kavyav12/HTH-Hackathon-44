@@ -9,8 +9,6 @@ langchain_google_genai
 langchain-community
 python-docx 
 reportlab
-
-
 assemblyai 
 requests 
 pyaudio 
