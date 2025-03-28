@@ -20,7 +20,7 @@ import re
 load_dotenv()
 api_key = os.getenv("GOOGLE_API_KEY")
 if not api_key:
-    st.error("GOOGLE_API_KEY is not available. Please check your .env file.")
+    st.error("GOOGLE_API_KEY is not set. Please check your .env file.")
     st.stop()
 
 genai.configure(api_key=api_key)
@@ -107,11 +107,13 @@ def load_css():
         overflow-wrap: break-word;
         word-wrap: break-word;
         word-break: break-word;
+        color: #333; /* Add explicit text color */
     }
     
     .message-content {
         width: 100%;
         padding: 0.5rem;
+        color: #333; /* Add explicit text color */
     }
     
     @keyframes slideIn {
@@ -125,13 +127,15 @@ def load_css():
     }
     
     .chat-message.user {
-        background: linear-gradient(to right, #e6f3ff, #d4e9fd);
+       
         border-left: 5px solid #2e86de;
+        color: #000000; /* Add explicit text color */
     }
     
     .chat-message.bot {
-        background: linear-gradient(to right, #f0f7ff, #e1eefa);
+        
         border-left: 5px solid #5cb85c;
+        color: #000000; /* Add explicit text color */
     }
     
     /* Elegant sidebar styling with depth */
@@ -215,7 +219,7 @@ def load_css():
         box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         transition: all 0.2s;
         animation: fadeIn 0.5s ease-out;
-        color: #333;
+        color: #ffffff;
     }
     
     .history-question {
@@ -495,6 +499,37 @@ def load_css():
         border-color: #2a5a85;
     }
     
+    /* Improved selectbox styling for dynamic height */
+    .stSelectbox>div>div>div {
+        border-radius: 4px;
+        border: 1.8px solid #e1e5eb;
+        padding: 12px 15px;
+        transition: all 0.3s;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        min-height: 60px;
+        height: auto;
+        display: flex;
+        align-items: center;
+        line-height: 1.4;
+    }
+
+    /* Style for dropdown options to ensure consistent text alignment */
+    .stSelectbox div[data-baseweb="select"] ul li {
+        padding: 10px 15px;
+        line-height: 1.4;
+        min-height: 72px;
+        height: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Fix for dropdown arrow alignment */
+    .stSelectbox div[data-baseweb="select"] div[role="button"] {
+        display: flex;
+        align-items: center;
+    }
+    
     /* Progress bar styling */
     .stProgress > div > div > div > div {
         background-color: #1a3c5a;
@@ -577,6 +612,10 @@ def load_css():
             background-color: rgba(30, 41, 59, 0.8);
             border-color: #2a3441;
             color: #e1e5eb;
+        }
+        
+        .chat-message, .message-content, .chat-message.user, .chat-message.bot {
+            color: #e1e5eb; /* Light color for text in dark mode */
         }
     }
     
@@ -903,7 +942,7 @@ def translate_ui_text(text_dict, target_lang):
 
 # Dictionary of UI text for translation
 UI_TEXT = {
-    "app_title": "Legal Assistant Pro",
+    "app_title": "JUSTISENSE",
     "chat_tab": "Chat",
     "document_analysis_tab": "Document Analysis",
     "contract_generator_tab": "Contract Generator",
@@ -961,8 +1000,118 @@ UI_TEXT = {
     "error_processing": "Error processing your question:",
     "try_again": "Try uploading and processing your documents again.",
     "upload_first": "Please upload and process documents first to enable analysis",
-    "no_history": "No chat history found"
+    "no_history": "No chat history found",
+    "document_enhancement": "Document Enhancement",
+    "enhancement_input": "Choose how to provide the document:",
+    "use_processed_doc": "Use processed document",
+    "upload_new_doc": "Upload new document",
+    "paste_text": "Paste text",
+    "using_processed_doc": "Using the processed document.",
+    "no_processed_doc": "No processed document found. Please upload and process a document first.",
+    "upload_enhance_doc": "Upload document to enhance",
+    "document_loaded": "Document loaded successfully.",
+    "document_load_error": "Error loading document:",
+    "paste_document_text": "Paste the document text here:",
+    "preview_original": "Preview Original Document",
+    "enhancement_options": "Enhancement Options",
+    "legal_formatting": "Apply legal formatting",
+    "clause_numbering": "Add clause numbering",
+    "term_definition": "Define legal terms",
+    "citation_format": "Format citations",
+    "clarity_improvement": "Improve clarity",
+    "risk_identification": "Identify risks",
+    "error_correction": "Correct errors",
+    "consistency_check": "Check for consistency",
+    "selected_enhancements": "Selected Enhancements",
+    "no_enhancements_selected": "No enhancements selected.",
+    "document_type": "Document Type",
+    "contract": "Contract",
+    "legal_brief": "Legal Brief",
+    "court_filing": "Court Filing",
+    "memo": "Memo",
+    "corporate_document": "Corporate Document",
+    "other": "Other",
+    "additional_instructions": "Additional Instructions",
+    "enhance_document": "Enhance Document",
+    "enhancing_document": "Enhancing document...",
+    "enhanced_document": "Enhanced Document",
+    "enhancements_applied": "Enhancements Applied",
+    "preview_enhanced": "Preview Enhanced Document",
+    "docx_download_error": "Error downloading DOCX. Please try again.",
+    "pdf_download_error": "Error downloading PDF. Please try again.",
+    "show_comparison": "Show Comparison",
+    "original_document": "Original Document",
+    "enhancement_error": "Error enhancing document:",
+    "provide_document": "Please provide a document to enhance."
 }
+
+# Add these entries to your UI_TEXT dictionary:
+
+# Update the UI_TEXT dictionary with new entries
+UI_TEXT.update({
+    # Document Enhancement tab
+    "document_enhancement": "Document Enhancement",
+    "enhancement_input": "Select document input method:",
+    "use_processed_doc": "Use already processed document",
+    "upload_new_doc": "Upload a new document",
+    "paste_text": "Paste document text",
+    "no_processed_doc": "No document has been processed yet. Please upload a document first.",
+    "using_processed_doc": "Using the previously processed document",
+    "upload_enhance_doc": "Upload a document to enhance",
+    "paste_document_text": "Paste your document text here",
+    "document_loaded": "Document loaded successfully",
+    "document_load_error": "Error loading document:",
+    "docx_import_error": "Python-docx module not found. Please install it to process DOCX files.",
+    "preview_original": "Preview Original Document",
+    "enhancement_options": "Enhancement Options",
+    "legal_formatting": "Legal Formatting",
+    "clause_numbering": "Clause Numbering and Structure",
+    "term_definition": "Define Legal Terms",
+    "citation_format": "Format Citations",
+    "clarity_improvement": "Improve Clarity and Readability",
+    "risk_identification": "Identify Legal Risks",
+    "error_correction": "Correct Grammar and Language Errors",
+    "consistency_check": "Check Term Consistency",
+    "selected_enhancements": "Selected Enhancements:",
+    "no_enhancements_selected": "No enhancements selected. Please select at least one enhancement option.",
+    "document_type": "Document Type:",
+    "contract": "Contract",
+    "legal_brief": "Legal Brief",
+    "court_filing": "Court Filing",
+    "memo": "Legal Memorandum",
+    "corporate_document": "Corporate Document",
+    "other": "Other",
+    "additional_instructions": "Additional Instructions (Optional):",
+    "enhance_document": "Enhance Document",
+    "enhancing_document": "Enhancing document...",
+    "enhanced_document": "Enhanced Document",
+    "enhancements_applied": "Enhancements Applied:",
+    "preview_enhanced": "Preview Enhanced Document",
+    "show_comparison": "Show Side-by-Side Comparison",
+    "original_document": "Original Document",
+    "enhancement_error": "Error enhancing document:",
+    "try_again": "Please try again. If the problem persists, try with a different document.",
+    "provide_document": "Please provide a document to enhance",
+    "docx_download_error": "Install python-docx for Word downloads",
+    "pdf_download_error": "Install reportlab for PDF downloads"
+})
+
+UI_TEXT.update({
+    # Add these entries for the Voice Chat tab
+    "voice_chat_tab": "Voice Chat",
+    "voice_language": "Select Language:",
+    "start_recording": "Start Recording",
+    "recording": "Recording... Speak now!",
+    "processing": "Processing...",
+    "your_input": "Your Input Text:",
+    "gemini_response": "Legal Assistant's Response:",
+    "download_audio": "Download Audio",
+    "recording_duration": "Recording Duration (seconds):",
+    "no_speech_detected": "No speech was detected. Please try again.",
+    "api_key_missing": "API key is missing. Please check your environment variables.",
+    "voice_chat_intro": "Speak in your preferred language to get legal assistance",
+    "voice_processing_error": "Error processing voice: "
+})
 
 def get_pdf_text(pdf_docs):
     """Extract text from uploaded PDFs with unicode error handling."""
@@ -1826,6 +1975,133 @@ def show_custom_spinner(message="Processing..."):
             </div>
             """.format(message), unsafe_allow_html=True)
 
+def record_audio(duration=10, sample_rate=16000):
+    """Record audio from microphone for specified duration"""
+    try:
+        import pyaudio
+        import numpy as np
+        import soundfile as sf
+        
+        CHUNK = 1024
+        FORMAT = pyaudio.paFloat32
+        CHANNELS = 1
+
+        p = pyaudio.PyAudio()
+        stream = p.open(format=FORMAT, channels=CHANNELS, rate=sample_rate, input=True, frames_per_buffer=CHUNK)
+
+        frames = []
+        
+        with st.status("Recording... Speak now!", expanded=True) as status:
+            for i in range(0, int(sample_rate / CHUNK * duration)):
+                data = stream.read(CHUNK)
+                frames.append(np.frombuffer(data, dtype=np.float32))
+                # Update progress
+                progress = (i+1)/(int(sample_rate / CHUNK * duration))
+                status.update(label=f"Recording... {int(progress*100)}%", state="running")
+            
+            status.update(label="Recording complete", state="complete")
+
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+
+        audio_array = np.concatenate(frames, axis=0)
+        temp_file = "temp_recording.wav"
+        sf.write(temp_file, audio_array, sample_rate)
+        return temp_file
+    
+    except Exception as e:
+        st.error(f"Error processing voice: {str(e)}")
+        return None
+
+def speech_to_text(audio_file, language_code):
+    """Convert speech to text using Google Speech Recognition"""
+    try:
+        import speech_recognition as sr
+        
+        # Create recognizer instance
+        r = sr.Recognizer()
+        
+        # Load the audio file
+        with sr.AudioFile(audio_file) as source:
+            audio_data = r.record(source)
+            
+            # Use Google Speech Recognition
+            text = r.recognize_google(audio_data, language=language_code)
+            return text
+    
+    except ImportError:
+        st.error("Missing speech_recognition package. Install with: pip install SpeechRecognition")
+        return None
+    except Exception as e:
+        st.error(f"Error processing voice: {str(e)}")
+        return None
+
+def text_to_speech(text, language_code, output_path="output_speech.mp3"):
+    """Convert text to speech using ElevenLabs"""
+    try:
+        import requests
+        
+        # Use a default key if environment variable isn't set
+        elevenlabs_api_key = os.getenv("ELEVENLABS_API_KEY", "sk_8153cf14f63223696a6e18d5d9ea9f64a6081f3f0ee68bcd")
+        
+        # Default voice ID (multilingual)
+        voice_id = "21m00Tcm4TlvDq8ikWAM"
+        
+        headers = {"xi-api-key": elevenlabs_api_key, "Content-Type": "application/json"}
+        data = {
+            "text": text,
+            "model_id": "eleven_multilingual_v2",  # Multilingual model for Indian languages
+            "voice_settings": {"stability": 0.5, "similarity_boost": 0.5}
+        }
+        
+        # Log request information for debugging (optional)
+        print(f"Making request to ElevenLabs API with text length: {len(text)}")
+        
+        response = requests.post(
+            f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}", 
+            json=data, 
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            with open(output_path, "wb") as f:
+                f.write(response.content)
+            return output_path
+        else:
+            error_message = f"TTS Error: Status {response.status_code}"
+            try:
+                error_details = response.json()
+                error_message += f" - {error_details.get('detail', '')}"
+            except:
+                error_message += f" - {response.text[:  100]}"
+            
+            st.error(error_message)
+            print(error_message)  # Log to console for debugging
+            return None
+    
+    except Exception as e:
+        error_message = f"Error processing voice: {str(e)}"
+        st.error(error_message)
+        print(error_message)  # Log to console for debugging
+        return None
+
+def fallback_text_to_speech(text, language_code, output_path="output_speech.mp3"):
+    """Fallback TTS using gTTS when ElevenLabs fails"""
+    try:
+        from gtts import gTTS
+        
+        # Map language code if needed (adjust according to your needs)
+        google_lang = language_code.split("-")[0] if "-" in language_code else language_code
+        
+        tts = gTTS(text=text, lang=google_lang, slow=False)
+        tts.save(output_path)
+        return output_path
+        
+    except Exception as e:
+        st.error(f"Fallback TTS error: {str(e)}")
+        return None
+
 def main():
     """Main Streamlit UI for PDF Chatbot with translation support."""
     st.set_page_config(page_title="Legal Assist", page_icon="⚖", layout="wide")
@@ -1861,4 +2137,727 @@ def main():
     with st.sidebar:
         st.markdown(f"<h2>{ui_text['settings']}</h2>", unsafe_allow_html=True)
         
-        st.markdo
+        st.markdown("---")
+        st.markdown(f"<h3>📄 {ui_text['document_processing']}</h3>", unsafe_allow_html=True)
+        
+        pdf_docs = st.file_uploader(ui_text['upload_docs'], accept_multiple_files=True, type=["pdf"])
+        
+        if st.button(ui_text['process_button']):
+            with st.spinner(f"Processing documents..."):
+                raw_text = get_pdf_text(pdf_docs)
+                if not raw_text.strip():
+                    st.error("No text extracted from PDFs. Please check the files.")
+                else:
+                    # Store the raw text for other features
+                    st.session_state.document_text = raw_text
+                    
+                    # Create chunks with error handling
+                    text_chunks = get_text_chunks(raw_text)
+                    
+                    # Process chunks with error handling
+                    success = get_vector_store(text_chunks)
+                    if success:
+                        st.success(f"✅ {ui_text['processing_complete']}")
+                    else:
+                        st.error("There was an issue processing your documents. Please try again.")
+
+    # Main area tabs with translated names
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+        f"💬 {ui_text['chat_tab']}", 
+        f"📜 {ui_text['document_analysis_tab']}", 
+        f"📝 {ui_text['contract_generator_tab']}", 
+        f"📋 {ui_text['history_tab']}",
+        f"✨ {ui_text['document_enhancement']}",
+        f"🎙 {ui_text['voice_chat_tab']}"
+    ])
+    
+    # Tab 1: Chat Interface
+    with tab1:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### {ui_text['ask_question']}")
+        user_question = st.text_input(ui_text['question_placeholder'])
+
+        if user_question:
+            try:
+                # Get embeddings and search
+                embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+
+                # Ensure FAISS index exists
+                if not os.path.exists("faiss_index"):
+                    st.error("No FAISS index found. Please upload and process PDFs first.")
+                else:
+                    # Load FAISS index safely
+                    new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+                    
+                    docs = new_db.similarity_search(user_question)
+                    chain = get_conversational_chain()
+                    
+                    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+                    reply = response.get("output_text", "No response generated.")
+                    
+                    translated_reply = translate_text(reply, selected_lang_code)
+                    
+                    # Display in custom message container
+                    st.markdown(
+                        f'<div class="chat-message user"><b>{translate_text("You", selected_lang_code)}:</b> {user_question}</div>', 
+                        unsafe_allow_html=True
+                    )
+                    st.markdown(
+                        f'<div class="chat-message bot"><b>{translate_text("Legal Assistant", selected_lang_code)}:</b> {translated_reply}</div>', 
+                        unsafe_allow_html=True
+                    )
+                    
+                    # Save to history
+                    save_chat_history(user_question, translated_reply)
+            except Exception as e:
+                st.error(f"{ui_text['error_processing']} {str(e)}")
+                st.info(ui_text['try_again'])
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Tab 2: Document Analysis
+    with tab2:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### {ui_text['document_analysis_tab']}")
+        
+        if st.session_state.document_text:
+            doc_text = st.session_state.document_text[:1000] + "..." if len(st.session_state.document_text) > 1000 else st.session_state.document_text
+            st.text_area(ui_text['document_preview'], doc_text, height=200)
+            
+            analysis_options = st.selectbox(
+                "Select analysis type:",
+                [
+                    ui_text['key_info'], 
+                    ui_text['timeline'], 
+                    ui_text['risk_assessment'], 
+                    ui_text['legal_entities'], 
+                    ui_text['obligations']
+                ]
+            )
+            
+            if st.button(ui_text['analyze_button']):
+                with st.spinner("Analyzing..."):
+                    try:
+                        # Timeline analysis
+                        if analysis_options == ui_text['timeline']:
+                            timeline_data = extract_timeline(st.session_state.document_text[:50000])
+                            st.markdown(f"### {ui_text['timeline_analysis']}")
+                            
+                            # If analysis results in a list, convert it to translated data
+                            if isinstance(timeline_data, list):
+                                translated_timeline = []
+                                for event in timeline_data:
+                                    translated_timeline.append({
+                                        "date": event.get('date', 'No date'),
+                                        "description": translate_text(event.get('description', 'No description'), selected_lang_code),
+                                        "parties": translate_text(event.get('parties', 'Not specified'), selected_lang_code),
+                                        "page": event.get('page', 'N/A')
+                                    })
+                                display_timeline(translated_timeline)
+                            else:
+                                translated_text = translate_text(timeline_data, selected_lang_code)
+                                display_timeline(translated_text)
+                        
+                        # Legal entities analysis
+                        elif analysis_options == ui_text['legal_entities']:
+                            entities = extract_legal_entities(st.session_state.document_text[:50000])
+                            st.markdown(f"### {ui_text['legal_entities_info']}")
+                            
+                            if "error" in entities:
+                                st.error(translate_text(entities["error"], selected_lang_code))
+                            else:
+                                for category, items in entities.items():
+                                    if items:  # Check if the list is not empty
+                                        st.markdown(f"#### {translate_text(category.title(), selected_lang_code)}")
+                                        for item in items:
+                                            st.markdown(f"- {translate_text(item, selected_lang_code)}")
+                        
+                        # Other analyses
+                        else:
+                            # Map the translated option back to English for the prompt
+                            analysis_prompt_map = {
+                                ui_text['key_info']: "Extract key information from this legal document including: parties involved, key dates, important clauses, and main subject matter.",
+                                ui_text['risk_assessment']: "Analyze this legal document for potential risks, liabilities, and areas of concern. Highlight clauses that could pose legal or financial risks.",
+                                ui_text['obligations']: "Summarize the main obligations of each party in this legal document. Create a clear list of responsibilities for each identified party."
+                            }
+                            
+                            # Use the mapped English prompt
+                            analysis_prompt = analysis_prompt_map.get(analysis_options, "Extract key information from this document.")
+                            
+                            model = genai.GenerativeModel('gemini-1.5-flash')
+                            response = model.generate_content(analysis_prompt + "\n\nDocument: " + st.session_state.document_text[:50000])
+                            
+                            # Translate the response
+                            translated_response = translate_text(response.text, selected_lang_code)
+                            
+                            st.markdown(f"### {analysis_options}")
+                            st.markdown(translated_response)
+                    except Exception as e:
+                        st.error(f"Error analyzing document: {str(e)}")
+        else:
+            st.info(ui_text['upload_first'])
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Tab 3: Contract Generator
+    with tab3:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### {ui_text['contract_generator_tab']}")
+        
+        contract_types = [
+            ui_text['employment_agreement'], 
+            ui_text['lease_agreement'], 
+            ui_text['nda'], 
+            ui_text['custom_contract']
+        ]
+        
+        contract_type = st.selectbox(
+            ui_text['select_contract'],
+            contract_types
+        )
+        
+        # Map selection to template names (use English keys for templates)
+        contract_type_map = {
+            ui_text['employment_agreement']: "employment",
+            ui_text['lease_agreement']: "lease",
+            ui_text['nda']: "nda",
+            ui_text['custom_contract']: "custom"
+        }
+        
+        selected_type = contract_type_map[contract_type]
+        
+        # Display appropriate fields based on contract type
+        context_info = {"contract_type": selected_type}
+        
+        if selected_type == "employment":
+            col1, col2 = st.columns(2)
+            with col1:
+                context_info["employer_name"] = st.text_input(ui_text['employer_name'])
+                context_info["employer_address"] = st.text_input(ui_text['employer_address'])
+                context_info["date"] = st.date_input(ui_text['agreement_date']).strftime("%B %d, %Y")
+            with col2:
+                context_info["employee_name"] = st.text_input(ui_text['employee_name'])
+                context_info["employee_address"] = st.text_input(ui_text['employee_address'])
+                context_info["position"] = st.text_input(ui_text['position_title'])
+            
+        elif selected_type == "lease":
+            col1, col2 = st.columns(2)
+            with col1:
+                context_info["landlord_name"] = st.text_input(ui_text['landlord_name'])
+                context_info["landlord_address"] = st.text_input(ui_text['landlord_address'])
+                context_info["date"] = st.date_input(ui_text['agreement_date']).strftime("%B %d, %Y")
+            with col2:
+                context_info["tenant_name"] = st.text_input(ui_text['tenant_name'])
+                context_info["tenant_address"] = st.text_input(ui_text['tenant_address'])
+                context_info["property_details"] = st.text_area(ui_text['property_description'])
+        
+        elif selected_type == "nda":
+            col1, col2 = st.columns(2)
+            with col1:
+                context_info["party1_name"] = st.text_input(ui_text['party1_name'])
+                context_info["party1_address"] = st.text_input(ui_text['party1_address'])
+                context_info["date"] = st.date_input(ui_text['agreement_date']).strftime("%B %d, %Y")
+            with col2:
+                context_info["party2_name"] = st.text_input(ui_text['party2_name'])
+                context_info["party2_address"] = st.text_input(ui_text['party2_address'])
+            context_info["purpose_details"] = st.text_area(ui_text['purpose_disclosure'])
+        
+        elif selected_type == "custom":
+            context_info["description"] = st.text_area(ui_text['contract_description'])
+            context_info["parties"] = st.text_input(ui_text['parties_involved'])
+            context_info["date"] = st.date_input(ui_text['agreement_date']).strftime("%B %d, %Y")
+        
+        # Translate jurisdiction options
+        jurisdiction_options = [
+            translate_text("Select jurisdiction", selected_lang_code), 
+            translate_text("Delhi, India", selected_lang_code), 
+            translate_text("Mumbai, India", selected_lang_code), 
+            translate_text("Bengaluru, India", selected_lang_code),
+            translate_text("Chennai, India", selected_lang_code), 
+            translate_text("Kolkata, India", selected_lang_code), 
+            translate_text("Hyderabad, India", selected_lang_code)
+        ]
+        
+        selected_jurisdiction = st.selectbox(ui_text['governing_law'], jurisdiction_options)
+        
+        # Map translated jurisdiction back to English for processing
+        jurisdiction_map = {
+            translate_text("Delhi, India", selected_lang_code): "Delhi, India",
+            translate_text("Mumbai, India", selected_lang_code): "Mumbai, India",
+            translate_text("Bengaluru, India", selected_lang_code): "Bengaluru, India",
+            translate_text("Chennai, India", selected_lang_code): "Chennai, India",
+            translate_text("Kolkata, India", selected_lang_code): "Kolkata, India",
+            translate_text("Hyderabad, India", selected_lang_code): "Hyderabad, India",
+        }
+        
+        context_info["jurisdiction"] = jurisdiction_map.get(selected_jurisdiction, selected_jurisdiction)
+        
+        # Place this code before the generate button to ensure preview updates on input
+        if selected_type != "custom":
+            # Use st.empty to create a container for the live preview that updates as you type
+            preview_container = st.container()
+            with preview_container:
+                show_contract_preview(context_info, selected_type)
+        
+        if st.button(ui_text['generate_contract']) and (selected_type != "custom" or context_info.get("description")):
+            with st.spinner("Generating contract..."):
+                try:
+                    if selected_type == "custom":
+                        # Generate custom contract
+                        prompt = f"""
+                        Generate a professional legal contract with the following specifications:
+                        - Contract description: {context_info.get('description')}
+                        - Parties involved: {context_info.get('parties')}
+                        - Date: {context_info.get('date')}
+                        - Jurisdiction: {context_info.get('jurisdiction')}
+                        
+                        Create a complete, properly formatted contract with appropriate sections, clauses, and signature blocks.
+                        
+                        IMPORTANT: DO NOT include any markdown formatting symbols like asterisks (*), 
+                        greater-than symbols (>), or bullet points. Return ONLY clean, plain text suitable 
+                        for direct inclusion in a legal document. Do not include 'Option 1/2/3' language or disclaimers.
+                        Format as a formal legal document with clear sections. Don't use bold or italics markers.
+                        """
+                        model = genai.GenerativeModel('gemini-1.5-flash')
+                        response = model.generate_content(prompt)
+                        
+                        # Clean up the response
+                        generated_contract = response.text
+                        generated_contract = re.sub(r'[*>•\-]', '', generated_contract)
+                        generated_contract = re.sub(r'Option \d+[:\)]', '', generated_contract)
+                        generated_contract = generated_contract.replace('', '').strip()
+                    else:
+                        # Generate from structured template
+                        generated_contract = generate_structured_contract(selected_type, context_info)
+                    
+                    # Translate the contract if needed (might not be desired for legal documents)
+                    if selected_lang_code != "en" and st.checkbox("Translate contract to selected language"):
+                        translated_contract = translate_text(generated_contract, selected_lang_code)
+                    else:
+                        translated_contract = generated_contract
+                    
+                    st.markdown(f"### {ui_text['generated_contract']}")
+                    st.text_area(ui_text['preview'], translated_contract, height=300)
+                    
+                    # Download options
+                    st.markdown("<div class='download-container'>", unsafe_allow_html=True)
+                    col1, col2, col3 = st.columns(3)
+                    
+                    with col1:
+                        st.markdown(download_document(generated_contract, f"{selected_type}_contract.txt"), unsafe_allow_html=True)
+                    
+                    with col2:
+                        try:
+                            st.markdown(download_document(generated_contract, f"{selected_type}_contract.docx"), unsafe_allow_html=True)
+                        except ImportError:
+                            st.info("Install python-docx for Word downloads")
+                    
+                    with col3:
+                        try:
+                            st.markdown(download_document(generated_contract, f"{selected_type}_contract.pdf"), unsafe_allow_html=True)
+                        except ImportError:
+                            st.info("Install reportlab for PDF downloads")
+                    
+                    st.markdown("</div>", unsafe_allow_html=True)
+                        
+                except Exception as e:
+                    st.error(f"Error generating contract: {str(e)}")
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Tab 4: History with translated UI
+    with tab4:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### {ui_text['chat_history']}")
+        
+        # Get and display history with translations
+        history = get_chat_history()
+        
+        if not history:
+            st.info(ui_text['no_history'])
+        else:
+            st.markdown("<div class='history-container'>", unsafe_allow_html=True)
+            
+            for item in reversed(history):  # Most recent first
+                st.markdown(
+                    f"<div class='history-item'>"
+                    f"<div class='history-timestamp'>{item['timestamp']}</div>"
+                    f"<div class='history-question'><strong>Q: {item['question']}</strong></div>"
+                    f"<div class='history-answer'>A: {item['answer'][:100]}{'...' if len(item['answer']) > 100 else ''}</div>"
+                    f"</div>", unsafe_allow_html=True
+                )
+            
+            st.markdown("</div>", unsafe_allow_html=True)
+        
+        if st.button(ui_text['clear_history']):
+            try:
+                os.makedirs("history", exist_ok=True)
+                with open("history/chat_history.json", "w") as f:
+                    json.dump([], f)
+                st.success(ui_text['history_cleared'])
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error clearing history: {str(e)}")
+                
+        st.markdown("</div>", unsafe_allow_html=True)
+    
+    # Tab 5: Document Enhancement
+    with tab5:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### {ui_text['document_enhancement']}")
+        
+        # Document input methods
+        enhancement_option = st.radio(
+            ui_text['enhancement_input'],
+            [ui_text['use_processed_doc'], ui_text['upload_new_doc'], ui_text['paste_text']]
+        )
+        
+        document_to_enhance = ""
+        
+        if enhancement_option == ui_text['use_processed_doc']:
+            if st.session_state.document_text:
+                document_to_enhance = st.session_state.document_text
+                st.success(ui_text['using_processed_doc'])
+            else:
+                st.warning(ui_text['no_processed_doc'])
+        
+        elif enhancement_option == ui_text['upload_new_doc']:
+            uploaded_file = st.file_uploader(ui_text['upload_enhance_doc'], type=["pdf", "txt", "docx"])
+            if uploaded_file is not None:
+                try:
+                    if uploaded_file.type == "application/pdf":
+                        pdf_reader = PdfReader(uploaded_file)
+                        document_to_enhance = ""
+                        for page in pdf_reader.pages:
+                            document_to_enhance += page.extract_text() + "\n"
+                    elif uploaded_file.type == "text/plain":
+                        document_to_enhance = uploaded_file.getvalue().decode("utf-8")
+                    elif uploaded_file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                        try:
+                            from docx import Document
+                            doc = Document(uploaded_file)
+                            document_to_enhance = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+                        except ImportError:
+                            st.error(ui_text['docx_import_error'])
+                    
+                    st.success(ui_text['document_loaded'])
+                except Exception as e:
+                    st.error(f"{ui_text['document_load_error']} {str(e)}")
+        
+        else:  # Paste text option
+            document_to_enhance = st.text_area(ui_text['paste_document_text'], height=200)
+        
+        if document_to_enhance:
+            # Preview original document
+            with st.expander(ui_text['preview_original']):
+                st.text_area("", document_to_enhance[:5000] + ("..." if len(document_to_enhance) > 5000 else ""), height=200)
+            
+            # Enhancement options
+            st.markdown(f"### {ui_text['enhancement_options']}")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                apply_legal_formatting = st.checkbox(ui_text['legal_formatting'])
+                apply_clause_numbering = st.checkbox(ui_text['clause_numbering'])
+                apply_term_definition = st.checkbox(ui_text['term_definition'])
+                apply_citation_format = st.checkbox(ui_text['citation_format'])
+            
+            with col2:
+                apply_clarity_improvement = st.checkbox(ui_text['clarity_improvement'])
+                apply_risk_identification = st.checkbox(ui_text['risk_identification'])
+                apply_error_correction = st.checkbox(ui_text['error_correction'])
+                apply_consistency_check = st.checkbox(ui_text['consistency_check'])
+            
+            # Selected enhancements summary
+            enhancement_tasks = []
+            if apply_legal_formatting:
+                enhancement_tasks.append(ui_text['legal_formatting'])
+            if apply_clause_numbering:
+                enhancement_tasks.append(ui_text['clause_numbering'])
+            if apply_term_definition:
+                enhancement_tasks.append(ui_text['term_definition'])
+            if apply_citation_format:
+                enhancement_tasks.append(ui_text['citation_format'])
+            if apply_clarity_improvement:
+                enhancement_tasks.append(ui_text['clarity_improvement'])
+            if apply_risk_identification:
+                enhancement_tasks.append(ui_text['risk_identification'])
+            if apply_error_correction:
+                enhancement_tasks.append(ui_text['error_correction'])
+            if apply_consistency_check:
+                enhancement_tasks.append(ui_text['consistency_check'])
+            
+            if enhancement_tasks:
+                st.markdown(f"{ui_text['selected_enhancements']}")
+                for task in enhancement_tasks:
+                    st.markdown(f"- {task}")
+            else:
+                st.info(ui_text['no_enhancements_selected'])
+            
+            # Document type (for better context)
+            document_types = [
+                ui_text['contract'], ui_text['legal_brief'], ui_text['court_filing'],
+                ui_text['memo'], ui_text['corporate_document'], ui_text['other']
+            ]
+            document_type = st.selectbox(ui_text['document_type'], document_types)
+            
+            # Additional instructions
+            additional_instructions = st.text_area(ui_text['additional_instructions'], height=100)
+            
+            # Enhance button
+            if st.button(ui_text['enhance_document']):
+                if not enhancement_tasks:
+                    st.warning(ui_text['no_enhancements_selected'])
+                else:
+                    with st.spinner(ui_text['enhancing_document']):
+                        try:
+                            # Create prompt for enhancement
+                            enhancement_prompt = f"""
+                            You are a legal document specialist tasked with enhancing a legal document.
+                            Document type: {document_type}
+                            
+                            Apply ONLY the following enhancements:
+                            {', '.join(enhancement_tasks)}
+                            
+                            Additional instructions: {additional_instructions}
+                            
+                            Original document text:
+                            {document_to_enhance[:5000000]}
+                            
+                            Return the enhanced document with all specified improvements.
+                            Focus EXCLUSIVELY on the specified enhancements.
+                            Maintain all original content while improving the document's structure and quality.
+                            
+                            Apply these formatting standards to the document:
+                            1. Section headings should be in ALL CAPS and clearly demarcated
+                            2. Proper hierarchical numbering (1, 1.1, 1.1.1, etc.)
+                            3. Consistent paragraph spacing
+                            4. Clear distinction between sections with line breaks
+                            5. Proper formatting for defined terms (e.g., "Agreement", "Parties")
+                            6. Proper indentation for lists and sub-clauses
+                            7. Aligned signature blocks at the document end
+                            
+                            If applying legal formatting or clause numbering:
+                            - Format the document with proper legal document structure
+                            - Use consistent numbering convention for all clauses and sub-clauses
+                            - Ensure proper indentation for hierarchical sections
+                            
+                            If defining legal terms:
+                            - Format defined terms with initial capitals
+                            - Present definitions in a consistent manner
+                            - Ensure terms are properly referenced throughout
+                            
+                            If formatting citations:
+                            - Use consistent legal citation format appropriate for the jurisdiction
+                            - Format case citations, statutes, and regulations according to standard legal practice
+                            
+                            IMPORTANT: DO NOT summarize or add commentary about what you did.
+                            ONLY return the enhanced document text, nothing else.
+                            """
+                            
+                            # Call Gemini for document enhancement
+                            model = genai.GenerativeModel('gemini-1.5-flash')
+                            response = model.generate_content(enhancement_prompt)
+                            
+                            # Clean up the enhanced document to remove ALL markdown symbols
+                            raw_text = response.text.strip()
+                            enhanced_document = re.sub(r'[*>#<•\-`]', '', raw_text)  # Remove markdown symbols
+                            enhanced_document = re.sub(r'\\(.?)\\*', r'\1', enhanced_document)  # Remove bold markers
+                            enhanced_document = re.sub(r'(.*?)', r'\1', enhanced_document)  # Remove italic markers
+                            enhanced_document = re.sub(r'.*?\n', '', enhanced_document)  # Remove code block markers
+                            enhanced_document = re.sub(r'', '', enhanced_document)  # Remove closing code block markers
+                            enhanced_document = re.sub(r'Option \d+[:\)]', '', enhanced_document)  # Remove option markers
+                            enhanced_document = enhanced_document.strip()
+                            
+                            # Show enhanced document with options to download
+                            st.markdown(f"### {ui_text['enhanced_document']}")
+                            
+                            # Display what enhancements were applied
+                            st.markdown(f"{ui_text['enhancements_applied']}")
+                            for task in enhancement_tasks:
+                                st.markdown(f"- {task}")
+                            
+                            # Show the enhanced document
+                            st.text_area(ui_text['preview_enhanced'], enhanced_document, height=400)
+                            
+                            # Download options
+                            st.markdown("<div class='download-container'>", unsafe_allow_html=True)
+                            col1, col2, col3 = st.columns(3)
+                            
+                            with col1:
+                                st.markdown(download_document(enhanced_document, "enhanced_document.txt"), unsafe_allow_html=True)
+                            
+                            with col2:
+                                try:
+                                    st.markdown(download_document(enhanced_document, "enhanced_document.docx"), unsafe_allow_html=True)
+                                except Exception:
+                                    st.info(ui_text['docx_download_error'])
+                            
+                            with col3:
+                                try:
+                                    st.markdown(download_document(enhanced_document, "enhanced_document.pdf"), unsafe_allow_html=True)
+                                except Exception:
+                                    st.info(ui_text['pdf_download_error'])
+                            
+                            st.markdown("</div>", unsafe_allow_html=True)
+                            
+                            # Comparison view
+                            with st.expander(ui_text['show_comparison']):
+                                col1, col2 = st.columns(2)
+                                with col1:
+                                    st.markdown(f"{ui_text['original_document']}")
+                                    st.text_area("", document_to_enhance[:5000] + 
+                                             ("..." if len(document_to_enhance) > 5000 else ""), height=400)
+                                
+                                with col2:
+                                    st.markdown(f"{ui_text['enhanced_document']}")
+                                    st.text_area("", enhanced_document[:5000] + 
+                                             ("..." if len(enhanced_document) > 5000 else ""), height=400)
+                            
+                            # Save enhanced document in session state for later use
+                            st.session_state.enhanced_document = enhanced_document
+                            
+                        except Exception as e:
+                            st.error(f"{ui_text['enhancement_error']} {str(e)}")
+                            st.info(ui_text['try_again'])
+        else:
+            st.info(ui_text['provide_document'])
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    # Tab 6: Voice Chat
+    with tab6:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### 🎙 {ui_text['voice_chat_tab']}")
+        st.markdown(f"{ui_text['voice_chat_intro']}")
+        
+        # Language selection for voice input/output
+        voice_languages = {
+            "Hindi": "hi",
+            "Tamil": "ta", 
+            "Telugu": "te",
+            "Bengali": "bn",
+            "Marathi": "mr",
+            "Kannada": "kn",
+            "English": "en"
+        }
+        
+        selected_voice_lang = st.selectbox(
+            ui_text['voice_language'],
+            list(voice_languages.keys())
+        )
+        voice_lang_code = voice_languages[selected_voice_lang]
+        
+        # Recording duration slider
+        recording_duration = st.slider(
+            ui_text['recording_duration'],
+            min_value=5,
+            max_value=30,
+            value=10,
+            step=5
+        )
+        
+        # Add environment variables info
+        with st.expander("API Keys & Setup"):
+            st.markdown("""
+            To use the Voice Chat feature, you need these API keys:
+            
+            *AssemblyAI API Key* (for speech recognition)
+            *ElevenLabs API Key* (for text-to-speech)
+            
+            Add these to your .env file:
+            
+            ASSEMBLYAI_API_KEY=your_assemblyai_api_key
+            ELEVENLABS_API_KEY=your_elevenlabs_api_key
+            
+            
+            Required Python packages:
+            - pyaudio
+            - numpy
+            - soundfile
+            - assemblyai
+            - requests
+            """)
+        
+        # Record button
+        if st.button(ui_text['start_recording']):
+            # First, check for necessary packages
+            missing_packages = []
+            try:
+                import pyaudio
+            except ImportError:
+                missing_packages.append("pyaudio")
+            
+            try:
+                import numpy as np
+            except ImportError:
+                missing_packages.append("numpy")
+                
+            try:
+                import soundfile as sf
+            except ImportError:
+                missing_packages.append("soundfile")
+                
+            try:
+                import assemblyai as aai
+            except ImportError:
+                missing_packages.append("assemblyai")
+                
+            if missing_packages:
+                st.error(f"Missing required packages: {', '.join(missing_packages)}. Please install them to use Voice Chat.")
+            else:
+                # Record audio
+                audio_file = record_audio(duration=recording_duration)
+                
+                if audio_file:
+                    with st.spinner(ui_text['processing']):
+                        # STT - Speech to Text
+                        input_text = speech_to_text(audio_file, voice_lang_code)
+                        
+                        if input_text and input_text != ui_text['no_speech_detected']:
+                            st.markdown(f"{ui_text['your_input']}")
+                            st.write(input_text)
+                            
+                            # Get response using the same mechanism as text chat
+                            model = genai.GenerativeModel('gemini-1.5-flash')
+                            prompt = f"""
+                            Respond to the following text in the same language (language code: {voice_lang_code}): 
+                            {input_text}
+                            
+                            Provide detailed legal information in response to the query.
+                            If the input is not a legal question, politely redirect and ask for a legal question.
+                            Focus on laws applicable in India when appropriate.
+                            Use formal but accessible language.
+                            Keep your response concise but informative.
+                            """
+                            
+                            response = model.generate_content(prompt)
+                            gemini_response = response.text
+                            
+                            st.markdown(f"{ui_text['gemini_response']}")
+                            st.write(gemini_response)
+                            
+                            # TTS - Text to Speech
+                            output_file = text_to_speech(gemini_response, voice_lang_code)
+                            
+                            if not output_file:
+                                output_file = fallback_text_to_speech(gemini_response, voice_lang_code)
+                            
+                            if output_file:
+                                # Provide audio playback
+                                st.audio(output_file)
+                                
+                                # Save chat history
+                                save_chat_history(input_text, gemini_response)
+                        else:
+                            st.warning(ui_text['no_speech_detected'])
+        
+        st.markdown("</div>", unsafe_allow_html=True)
+        
+
+if _name_ == "_main_":
+    try:
+        if 'document_text' not in st.session_state:
+            st.session_state.document_text = ""
+        main()
+    except Exception as e:
+        st.error(f"Application error: {str(e)}")
+        st.info("Please refresh the page and try again. If the problem persists, contact support.")

@@ -6,7 +6,13 @@ PyPDF2
 chromadb
 faiss-cpu
 langchain_google_genai
-pyaudio
-pyttsx3
+langchain-community
+python-docx 
+reportlab
+
+
+assemblyai 
+requests 
+pyaudio 
+soundfile
 SpeechRecognition
-gtts
