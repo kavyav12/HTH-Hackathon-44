@@ -15,6 +15,20 @@ import base64
 from datetime import datetime
 import json
 import re
+import random
+import time
+
+# For the Case Finder tab (add near the top with other imports)
+try:
+    from selenium import webdriver
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.chrome.service import Service
+    from webdriver_manager.chrome import ChromeDriverManager
+    from selenium.webdriver.chrome.options import Options
+    import urllib.parse
+    SELENIUM_AVAILABLE = True
+except ImportError:
+    SELENIUM_AVAILABLE = False
 
 # Load environment variables
 load_dotenv()
@@ -1113,6 +1127,22 @@ UI_TEXT.update({
     "voice_processing_error": "Error processing voice: "
 })
 
+UI_TEXT.update({
+    # Add these entries for the Legal Case Finder tab
+    "case_finder_tab": "Case Finder",
+    "case_finder_title": "Legal Case & News Finder",
+    "case_finder_description": "Search for relevant legal cases and news articles by keyword",
+    "search_keyword": "Enter a keyword to find related legal cases & news:",
+    "search_button": "Search",
+    "searching_message": "Searching for articles and cases related to '{}'...",
+    "related_results": "Related Legal Cases & News",
+    "no_results": "No relevant pages found. Try another keyword.",
+    "enter_keyword": "Please enter a keyword.",
+    "source": "Source:",
+    "open_link": "Open Link",
+    "packages_missing": "Missing required packages: {}. Please install selenium and webdriver-manager."
+})
+
 def get_pdf_text(pdf_docs):
     """Extract text from uploaded PDFs with unicode error handling."""
     text = ""
@@ -2102,6 +2132,67 @@ def fallback_text_to_speech(text, language_code, output_path="output_speech.mp3"
         st.error(f"Fallback TTS error: {str(e)}")
         return None
 
+def generate_related_queries(keyword):
+    """Generate broader search queries for legal research"""
+    variations = [
+        f"{keyword} court case news",
+        f"{keyword} legal judgment pdf",
+        f"{keyword} supreme court ruling",
+        f"{keyword} lawsuit history",
+        f"{keyword} government legal documents",
+        f"{keyword} case law reference",
+        f"{keyword} verdict and appeals",
+        f"{keyword} high court decision",
+        f"{keyword} latest legal updates",
+        f"{keyword} legal case study",
+        f"{keyword} legal precedents",
+        f"{keyword} litigation process",
+        f"{keyword} law enforcement cases",
+        f"{keyword} judicial decisions",
+        f"{keyword} supreme court review",
+        f"{keyword} appeals court ruling",
+    ]
+    return random.sample(variations, min(len(variations), 7))  # Select 7 queries randomly
+
+def scrape_links(keyword, max_results=15):
+    """Scrape legal case links for multiple queries"""
+    queries = generate_related_queries(keyword)
+    all_links = set()
+
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
+    try:
+        service = Service(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+
+        for query in queries:
+            search_url = f"https://www.bing.com/search?q={urllib.parse.quote(query)}"
+            driver.get(search_url)
+            time.sleep(2)
+
+            search_results = driver.find_elements(By.CSS_SELECTOR, "li.b_algo")
+            for result in search_results:
+                try:
+                    link_element = result.find_element(By.TAG_NAME, "a")
+                    link = link_element.get_attribute("href")
+                    if link:
+                        all_links.add(link)
+                    if len(all_links) >= max_results:
+                        break
+                except Exception:
+                    continue  
+            if len(all_links) >= max_results:
+                break
+
+        driver.quit()
+        return list(all_links)[:max_results]
+    except Exception as e:
+        st.error(f"Error searching for cases: {str(e)}")
+        return []
+
 def main():
     """Main Streamlit UI for PDF Chatbot with translation support."""
     st.set_page_config(page_title="Legal Assist", page_icon="⚖", layout="wide")
@@ -2162,13 +2253,14 @@ def main():
                         st.error("There was an issue processing your documents. Please try again.")
 
     # Main area tabs with translated names
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         f"💬 {ui_text['chat_tab']}", 
         f"📜 {ui_text['document_analysis_tab']}", 
         f"📝 {ui_text['contract_generator_tab']}", 
         f"📋 {ui_text['history_tab']}",
         f"✨ {ui_text['document_enhancement']}",
-        f"🎙 {ui_text['voice_chat_tab']}"
+        f"🎙 {ui_text['voice_chat_tab']}",
+        f"🔍 {ui_text['case_finder_tab']}"
     ])
     
     # Tab 1: Chat Interface
@@ -2852,6 +2944,65 @@ def main():
         
         st.markdown("</div>", unsafe_allow_html=True)
         
+    # Tab 7: Legal Case Finder
+    with tab7:
+        st.markdown("<div class='document-tab'>", unsafe_allow_html=True)
+        st.markdown(f"### 🔍 {ui_text['case_finder_title']}")
+        st.markdown(f"{ui_text['case_finder_description']}")
+        
+        if not SELENIUM_AVAILABLE:
+            st.error(ui_text['packages_missing'].format("selenium, webdriver-manager"))
+            st.markdown("""
+            Please install the required packages:
+            
+            pip install selenium webdriver-manager
+            
+            """)
+        else:
+            keyword = st.text_input(ui_text['search_keyword'])
+            
+            if st.button(ui_text['search_button']):
+                if keyword:
+                    with st.status(ui_text['searching_message'].format(keyword), expanded=True) as status:
+                        links = scrape_links(keyword)
+                        status.update(label="Search complete!", state="complete")
+                    
+                    if links:
+                        st.subheader(f"📜 {ui_text['related_results']}")
+                        
+                        # Create a 3-column layout for results
+                        cols = st.columns(3)
+                        for i, link in enumerate(links):
+                            domain = urllib.parse.urlparse(link).netloc  # Extract website domain
+                            
+                            # Styled box for each result
+                            with cols[i % 3]:
+                                st.markdown(
+                                    f"""
+                                    <div style="
+                                        border: 2px solid #1a3c5a;
+                                        padding: 15px;
+                                        margin-bottom: 15px;
+                                        border-radius: 8px;
+                                        background-color: rgba(255, 255, 255, 0.05);
+                                        text-align: center;
+                                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                                        transition: transform 0.3s;
+                                    ">
+                                        <p><strong>{ui_text['source']}</strong> {domain}</p>
+                                        <a href="{link}" target="_blank" class="download-button" style="text-decoration: none;">
+                                            🔗 {ui_text['open_link']}
+                                        </a>
+                                    </div>
+                                    """, 
+                                    unsafe_allow_html=True
+                                )
+                    else:
+                        st.warning(ui_text['no_results'])
+                else:
+                    st.warning(ui_text['enter_keyword'])
+        
+        st.markdown("</div>", unsafe_allow_html=True)
 
 if _name_ == "_main_":
     try:
